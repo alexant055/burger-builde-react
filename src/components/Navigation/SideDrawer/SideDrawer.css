@@ -26,6 +26,6 @@
     transform: translateX(-100%);
 }
 
-.SideDrawer .Logo {
-    height: 11%;
+.SideDrawer-Logo {
+    max-height: 56px;
 }

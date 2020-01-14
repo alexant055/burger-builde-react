@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 
 /* Higher Order Component - HOC */
-import Aux from '../../hoc/aux-hoc';
+import Aux from '../../hoc/Aux/aux-hoc';
 
 /* Components */
 import Burger from '../../components/Burger/Burger'
