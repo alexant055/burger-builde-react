@@ -6,6 +6,8 @@ import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 
 import axios from "../../../axios-orders";
+import ErrorHandler from "../../../hoc/ErrorHandler/ErrorHandler";
+import * as orderActions from "../../../Store/actions/index";
 
 import './ContactData.css'
 
@@ -51,11 +53,10 @@ class ContactData extends Component {
                         {value: 'fastest', displayValue: 'Fastest'},
                         {value: 'cheapest', displayValue: 'Cheapest'}]
                 },
-                value: '', valid: true
+                value: 'fastest', valid: true
             },
         },
-        formValid: false,
-        loading: false
+        formValid: false
     }
 
     checkValidity(value, rules) {
@@ -89,7 +90,6 @@ class ContactData extends Component {
         event.preventDefault();
         // alert('continue');
         // .json used for firebase project
-        this.setState({loading: true});
         const formData = {};
         for (let element in this.state.orderForm) {
             formData[element] = this.state.orderForm[element].value;
@@ -99,15 +99,7 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData
         }
-
-        axios.post("/orders.json", order)
-            .then(response => {
-                this.setState({loading: false});
-                this.props.history.push("/");
-            })
-            .catch(error => {
-                this.setState({loading: false});
-            });
+        this.props.onOrderBurger(order);
     }
 
     render() {
@@ -136,7 +128,7 @@ class ContactData extends Component {
             </form>
         );
 
-        if (this.state.loading)
+        if (this.props.loading)
             form = <Spinner/>
 
         return (
@@ -150,9 +142,17 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.orderFunc.loading
     }
-}
+};
 
-export default connect(mapStateToProps)(ContactData);
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (order) => dispatch(orderActions.purchaseBurger(order))
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorHandler(ContactData, axios));

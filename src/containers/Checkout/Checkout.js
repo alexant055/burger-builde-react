@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Route} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
@@ -7,6 +7,7 @@ import ContactData from "./ContactData/ContactData";
 import {connect} from "react-redux";
 
 class Checkout extends Component {
+
     continuedCheckoutHandler = () => {
         this.props.history.replace("/checkout/contact-data");
     }
@@ -16,14 +17,27 @@ class Checkout extends Component {
     }
 
     render() {
+        let summary = <Redirect to="/"/>
+
+        if (this.props.ings) {
+            const purchaseRedirect = this.props.purchased ? <Redirect to="/"/> : null;
+            summary = (
+                <div>
+                    {purchaseRedirect}
+                    <CheckoutSummary
+                        ingredients={this.props.ings}
+                        cancelCheckout={this.cancelCheckoutHandler}
+                        continuedCheckout={this.continuedCheckoutHandler}/>
+                    <Route path={this.props.match.path + '/contact-data'}
+                           component={ContactData}/>
+                </div>
+            );
+        }
+
+
         return (
             <div>
-                <CheckoutSummary
-                    ingredients={this.props.ings}
-                    cancelCheckout={this.cancelCheckoutHandler}
-                    continuedCheckout={this.continuedCheckoutHandler}/>
-                <Route path={this.props.match.path + '/contact-data'}
-                       component={ContactData}/>
+                {summary}
             </div>
         );
     }
@@ -32,8 +46,9 @@ class Checkout extends Component {
 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        purchased: state.orderFunc.purchased
     }
 }
 
