@@ -84,7 +84,7 @@ class ContactData extends Component {
         }
 
         this.setState({orderForm: updatedOrderForm, formValid: formIsValid});
-    }
+    };
 
     orderHandler = (event) => {
         event.preventDefault();
@@ -98,9 +98,9 @@ class ContactData extends Component {
             ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData
-        }
+        };
         this.props.onOrderBurger(order);
-    }
+    };
 
     render() {
         const formElement = [];
