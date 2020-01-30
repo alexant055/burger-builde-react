@@ -17,7 +17,7 @@ import * as burgerBuilderActions from "../../Store/actions/index";
 
 import axios from "../../../src/axios-orders";
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 
     state = {
         purchasing: false,
